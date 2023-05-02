@@ -1,11 +1,15 @@
 package com.example.oauth2service.Config;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -19,7 +23,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+@Data
 public class SecurityConfig {
 
     private String CLIENT_ID = "72913889155-vqs6ltlovjkhughlth06s43f28ruofbh.apps.googleusercontent.com";
@@ -32,6 +36,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize->authorize.anyRequest().authenticated())
                 .oauth2Login(withDefaults())
                 .build();
+    }
+
+    //passwordEncoder that matches our PasswordEncoder that is already in use
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 
     //ClientRegistration
